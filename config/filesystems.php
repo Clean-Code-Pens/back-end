@@ -44,6 +44,13 @@ return [
             'throw' => false,
         ],
 
+        // 'public' => [
+        //     'driver' => 'local',
+        //     'root' => public_path('storage'), // The storage directory inside your public folder
+        //     'url' => env('APP_URL').'/storage',
+        //     'visibility' => 'public',
+        // ],
+
         's3' => [
             'driver' => 's3',
             'key' => env('AWS_ACCESS_KEY_ID'),
@@ -70,7 +77,11 @@ return [
     */
 
     'links' => [
-        public_path('storage') => storage_path('app/public'),
+        // public_path('storage') => storage_path('app/public'),
+        // public_path('storage/app/event') => storage_path('app/public/event'),
+        public_path('event') => storage_path('app/public/event'),
+
+
     ],
 
 ];
