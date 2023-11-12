@@ -28,6 +28,6 @@ class DatabaseSeeder extends Seeder
         $this->call(EventSeeder::class);
         $this->call(EventCategorySeeder::class);
         $this->call(MeetSeeder::class);
-
+        $this->call(MeetRequestSeeder::class);
     }
 }

@@ -77,9 +77,13 @@ return [
     */
 
     'links' => [
+        public_path('event') => storage_path('app/event'),
+
         // public_path('storage') => storage_path('app/public'),
         // public_path('storage/app/event') => storage_path('app/public/event'),
-        public_path('event') => storage_path('app/public/event'),
+        // public_path('event') => storage_path('app/public/event'),
+        public_path('public/event') => storage_path('app/public/event'),
+
 
 
     ],

@@ -16,7 +16,10 @@ class MeetController extends Controller
 
         $limit = $request->input('limit', 100); 
 
-        $meets = Meet::with(['user', 'event'])->take($limit)->get();
+        $meets = Meet::with(['user', 'event'])
+                        ->take($limit)
+                        ->orderBy('id', 'desc')
+                        ->get();
     
         if(count($meets)){
             return $this->responseSuccessWithData('Success', $meets);
@@ -64,4 +67,61 @@ class MeetController extends Controller
             return $this->responseError('Meet not found', 404);
         }
     }
+
+    public function byevent(Request $request, string $id)
+    {
+
+        $limit = $request->input('limit', 100); 
+
+        $meets = Meet::with(['user', 'event'])
+                        ->where('event_id', $id)
+                        ->take($limit)
+                        ->orderBy('id', 'desc')
+                        ->get();
+    
+        if(count($meets)){
+            return $this->responseSuccessWithData('Success', $meets);
+
+        }
+        else{
+            return $this->responseError('Meeting not found', 404);
+        }
+    }
+
+    public function event(Request $request)
+    {
+
+        $limit = $request->input('limit', 100); 
+        $id = $request->event_id;
+        $meets = Meet::with(['user', 'event'])
+                        ->where('event_id', $id)
+                        ->take($limit)
+                        ->get();
+    
+        if(count($meets)){
+            return $this->responseSuccessWithData('Success', $meets);
+
+        }
+        else{
+            return $this->responseError('Meeting not found', 404);
+        }
+    }
+
+    public function myMeet(Request $request){
+        $id = auth()->user()->id;
+        $limit = $request->input('limit', 100); 
+        $meets = Meet::with(['user', 'event'])
+                        ->take($limit)
+                        ->orderBy('id', 'desc')
+                        ->where('user_id', $id)
+                        ->get();
+        if(count($meets)){
+            return $this->responseSuccessWithData('Success', $meets);
+
+        }
+        else{
+            return $this->responseError('Meeting not found', 404);
+        }
+    }
+
 }

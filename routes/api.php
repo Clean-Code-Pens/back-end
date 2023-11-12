@@ -2,10 +2,11 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Api\Auth\AuthController;
-use App\Http\Controllers\Api\EventController;
-use App\Http\Controllers\Api\EventCategoryController;
 use App\Http\Controllers\Api\MeetController;
+use App\Http\Controllers\Api\EventController;
+use App\Http\Controllers\Api\Auth\AuthController;
+use App\Http\Controllers\Api\MeetRequestController;
+use App\Http\Controllers\Api\EventCategoryController;
 
 /*
 |--------------------------------------------------------------------------
@@ -39,6 +40,7 @@ Route::prefix('event')->group(function(){
     Route::get('/', [EventController::class, 'index']);
     Route::get('/{id}', [EventController::class, 'show']);
     Route::get('/by-category/{id}', [EventController::class, 'getEventByCategory']);
+    Route::post('/search', [EventController::class, 'searchEvent']);
 });
 
 
@@ -52,13 +54,29 @@ Route::prefix('meet')->group(function(){
 
 });
 
+Route::prefix('meetbyevent')->group(function(){
+    Route::post('/event', [MeetController::class, 'event']);
+    Route::get('/{id}', [MeetController::class, 'byevent']);
+});
+
 Route::group(['middleware'=>['api','jwt.verify']], function(){
     Route::prefix('event')->group(function(){
         Route::post('/create', [EventController::class, 'store']);
+        Route::post('/create-base', [EventController::class, 'storebase']);
+        Route::post('/my', [EventController::class, 'myEvent']);
+
     });
 
     Route::prefix('meet')->group(function(){
         Route::post('/create', [MeetController::class, 'store']);
+        Route::post('/my', [MeetController::class, 'myMeet']);
+    });
+
+    Route::prefix('meet-request')->group(function(){
+        Route::post('/create', [MeetRequestController::class, 'store']);
+        Route::post('/update', [MeetRequestController::class, 'update']);
+
+
     });
 
 });

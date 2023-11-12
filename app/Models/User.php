@@ -83,4 +83,9 @@ class User extends Authenticatable implements JWTSubject
         return $this->hasMany(Meet::class);
     }
 
+    public function meetRequest()
+    {
+        return $this->hasMany(MeetRequest::class);
+    }
+
 }

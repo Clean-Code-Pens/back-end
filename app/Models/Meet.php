@@ -27,4 +27,9 @@ class Meet extends Model
     {
         return $this->belongsTo(Event::class);
     }
+
+    public function meetRequest()
+    {
+        return $this->hasMany(MeetRequest::class);
+    }
 }
