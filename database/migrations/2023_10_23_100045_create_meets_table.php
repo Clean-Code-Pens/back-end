@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('description');
             $table->integer('people_need');
+            $table->enum('status', ['open', 'close'])->default('open');
             $table->timestamps();
         });
     }

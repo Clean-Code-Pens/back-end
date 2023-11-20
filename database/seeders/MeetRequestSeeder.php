@@ -14,15 +14,22 @@ class MeetRequestSeeder extends Seeder
     public function run(): void
     {
         MeetRequest::create([
-            'user_id' => 2,
-            'meet_id' => 1,
-            'status' => false,
+            'user_id' => 3,
+            'meet_id' => 8,
+            // 'status' => false,
         ]);
 
         MeetRequest::create([
-            'user_id' => 3,
-            'meet_id' => 1,
-            'status' => true,
+            'user_id' => 4,
+            'meet_id' => 8,
+            // 'status' => true,
+        ]);
+
+        
+        MeetRequest::create([
+            'user_id' => 2,
+            'meet_id' => 7,
+            // 'status' => true,
         ]);
     }
 }

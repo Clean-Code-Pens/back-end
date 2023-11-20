@@ -35,7 +35,7 @@ class MeetRequestController extends Controller
         }
     }
 
-    public function update(Request $request){
+    public function acceptMeet(Request $request){
         $validator = Validator::make($request->all(),[
             "id" => "required",
         ]);
@@ -51,14 +51,40 @@ class MeetRequestController extends Controller
             return $this->responseError('Meet Request not found', 404);
         } 
 
-        $validData['status'] = true;
+        $validData['status'] = 'accepted';
 
         try {
             $meet->update($validData);
-            return $this->responseSuccessWithData('Meet Request Updated', $meet);
+            return $this->responseSuccessWithData('Berhasil Disetujui', $meet);
         } catch (QueryException $e) {
             return $this->responseError("Internal Server Error", 500, $e->errorInfo);
         }
 
+    }
+
+    public function rejectMeet(Request $request){
+        $validator = Validator::make($request->all(),[
+            "id" => "required",
+        ]);
+
+        if ($validator->fails()) {
+            return $this->responseFailValidation($validator->errors());
+        }
+
+        $validData = $validator->validated();
+
+        $meet = MeetRequest::find($validData['id']);
+        if (!$meet) {
+            return $this->responseError('Meet Request not found', 404);
+        } 
+
+        $validData['status'] = 'reject';
+
+        try {
+            $meet->update($validData);
+            return $this->responseSuccessWithData('Berhasil Ditolak', $meet);
+        } catch (QueryException $e) {
+            return $this->responseError("Internal Server Error", 500, $e->errorInfo);
+        }
     }
 }

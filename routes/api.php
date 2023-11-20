@@ -51,6 +51,8 @@ Route::prefix('event-category')->group(function(){
 Route::prefix('meet')->group(function(){
     Route::get('/', [MeetController::class, 'index']);
     Route::get('/{id}', [MeetController::class, 'show']);
+    Route::post('/search', [MeetController::class, 'searchMeet']);
+
 
 });
 
@@ -70,12 +72,16 @@ Route::group(['middleware'=>['api','jwt.verify']], function(){
     Route::prefix('meet')->group(function(){
         Route::post('/create', [MeetController::class, 'store']);
         Route::post('/my', [MeetController::class, 'myMeet']);
+        Route::post('/my-join', [MeetController::class, 'myJoinMeet']);
+        Route::post('/my-detail', [MeetController::class, 'myDetailMeet']);
+
+
     });
 
     Route::prefix('meet-request')->group(function(){
         Route::post('/create', [MeetRequestController::class, 'store']);
-        Route::post('/update', [MeetRequestController::class, 'update']);
-
+        Route::post('/accept', [MeetRequestController::class, 'acceptMeet']);
+        Route::post('/reject', [MeetRequestController::class, 'rejectMeet']);
 
     });
 

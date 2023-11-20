@@ -15,6 +15,7 @@ class Meet extends Model
         'name',
         'description',
         'people_need',
+        'status'
 
     ];
 
