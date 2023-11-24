@@ -4,9 +4,11 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\MeetController;
 use App\Http\Controllers\Api\EventController;
+use App\Http\Controllers\Api\ProfileController;
 use App\Http\Controllers\Api\Auth\AuthController;
 use App\Http\Controllers\Api\MeetRequestController;
 use App\Http\Controllers\Api\EventCategoryController;
+use App\Http\Controllers\Api\NotificationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -66,6 +68,7 @@ Route::group(['middleware'=>['api','jwt.verify']], function(){
         Route::post('/create', [EventController::class, 'store']);
         Route::post('/create-base', [EventController::class, 'storebase']);
         Route::post('/my', [EventController::class, 'myEvent']);
+        Route::post('/report', [EventController::class, 'report']);
 
     });
 
@@ -74,7 +77,8 @@ Route::group(['middleware'=>['api','jwt.verify']], function(){
         Route::post('/my', [MeetController::class, 'myMeet']);
         Route::post('/my-join', [MeetController::class, 'myJoinMeet']);
         Route::post('/my-detail', [MeetController::class, 'myDetailMeet']);
-
+        Route::post('/tutup', [MeetController::class, 'tutup']);
+        Route::post('/report', [MeetController::class, 'report']);
 
     });
 
@@ -82,7 +86,23 @@ Route::group(['middleware'=>['api','jwt.verify']], function(){
         Route::post('/create', [MeetRequestController::class, 'store']);
         Route::post('/accept', [MeetRequestController::class, 'acceptMeet']);
         Route::post('/reject', [MeetRequestController::class, 'rejectMeet']);
+        Route::post('/list', [MeetRequestController::class, 'getByMeet']);
 
+    });
+
+    Route::prefix('profile')->group(function(){
+        Route::get('/my', [ProfileController::class, 'myProfile']);
+        Route::post('/update', [ProfileController::class, 'update']);
+        Route::post('/update-foto', [ProfileController::class, 'updateFoto']);
+        Route::post('/update-password', [ProfileController::class, 'ubahPassword']);
+        Route::post('/orang', [ProfileController::class, 'getProfile']);
+
+
+
+    });
+
+    Route::prefix('notification')->group(function(){
+        Route::post('/', [NotificationController::class, 'index']);
     });
 
 });

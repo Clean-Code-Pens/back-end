@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Notification;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as BaseController;
@@ -42,6 +43,14 @@ class Controller extends BaseController
             'message' => $msg,
             'data' => $data
         ], 200);
+    }
+
+    public function createNotification($user_id = null, $description = null)
+    {
+
+        $validData['user_id'] = $user_id;
+        $validData['description'] = $description;
+        $notif = Notification::create($validData);
     }
 
     // public function responseSuccessWithData($msg = null, $data = null)

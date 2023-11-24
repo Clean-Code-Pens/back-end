@@ -33,4 +33,9 @@ class Meet extends Model
     {
         return $this->hasMany(MeetRequest::class);
     }
+
+    public function reportMeets()
+    {
+        return $this->hasMany(ReportMeet::class);
+    }
 }

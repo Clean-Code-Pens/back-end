@@ -87,4 +87,30 @@ class MeetRequestController extends Controller
             return $this->responseError("Internal Server Error", 500, $e->errorInfo);
         }
     }
+
+    public function getByMeet(Request $request){
+        $validator = Validator::make($request->all(),[
+            "meet_id" => "required",
+        ]);
+
+        if ($validator->fails()) {
+            return $this->responseFailValidation($validator->errors());
+        }
+
+        $validData = $validator->validated();
+
+        $meet = MeetRequest::with('user.profile')
+                ->where('meet_id', $validData['meet_id'])
+                ->where('status', '!=', 'reject')
+                ->get();
+
+        
+        if(count($meet)){
+            return $this->responseSuccessWithData('Success', $meet);
+
+        }
+        else{
+            return $this->responseError('Belum Ada Orang Yang Mendaftar', 404);
+        }
+    }
 }

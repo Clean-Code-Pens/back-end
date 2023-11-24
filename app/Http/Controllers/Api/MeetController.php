@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Meet;
 use App\Models\MeetRequest;
+use App\Models\ReportMeet;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Database\QueryException;
@@ -196,6 +197,47 @@ class MeetController extends Controller
         }
         else{
             return $this->responseError('Meeting not found', 404);
+        }
+    }
+
+    public function tutup(Request $request){
+        $meets = Meet::where('id', $request->id)
+                        ->first();
+
+        try {
+            $data['status'] = 'close';
+
+            // Update Table User
+            $meets->update($data);
+
+            return $this->responseSuccessWithData('Meet Berhasil Ditutup', $meets);
+
+        } catch (QueryException $e) {
+            return $this->responseError("Internal Server Error", 500, $e->errorInfo);
+        }
+    }
+
+    public function report(Request $request){
+        $id = auth()->user()->id;
+
+        $validator = Validator::make($request->all(),[
+            "meet_id" => "required",
+        ]);
+
+        if ($validator->fails()) {
+            return $this->responseFailValidation($validator->errors());
+        }
+
+        $validData = $validator->validated();
+
+        $validData['user_id'] = $id;
+
+
+        try {
+            $meet = ReportMeet::create($validData);
+            return $this->responseSuccessWithData('Meeting Berhasil Dilaporkan', $meet);
+        } catch (QueryException $e) {
+            return $this->responseError("Internal Server Error", 500, $e->errorInfo);
         }
     }
 

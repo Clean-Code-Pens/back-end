@@ -93,4 +93,9 @@ class User extends Authenticatable implements JWTSubject
         return $this->hasMany(MeetRequest::class);
     }
 
+    public function notifications()
+    {
+        return $this->hasMany(Notification::class);
+    }
+
 }

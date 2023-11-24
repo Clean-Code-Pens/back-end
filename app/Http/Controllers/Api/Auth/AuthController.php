@@ -2,15 +2,17 @@
 
 namespace App\Http\Controllers\Api\Auth;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-
-use Illuminate\Support\Facades\Auth;
 use App\Models\User;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Database\QueryException;
+use App\Models\Profile;
+
 use Illuminate\Support\Str;
+use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
+use Illuminate\Database\QueryException;
+use Illuminate\Support\Facades\Validator;
+use App\Http\Controllers\Api\Auth\AuthController;
 
 class AuthController extends Controller
 {
@@ -72,7 +74,22 @@ class AuthController extends Controller
 
         try {
             $data=User::create($validData);
-            return $this->responseCreated("Successfully registered.", $data);
+            $this->createNotification($data->id, 'Selamat Datang !, Registrasi Anda Berhasil !');
+            $profile['user_id'] = $data->id;
+            $profile['profile_picture'] = '/profilePicture/usericon.png';
+
+            $checkProfile = Profile::where('user_id', $profile['user_id'])->get();
+
+            // return $checkProfile;
+            if(!count($checkProfile)){
+            // if (!$checkProfile) {
+                $profile = Profile::create($profile);
+                $succes['user'] = $data;
+                $succes['profile'] = $profile;
+
+            } 
+
+            return $this->responseCreated("Successfully registered.", $succes);
         } catch (QueryException $e) {
             return $this->responseError("Internal Server Error", 500, $e->errorInfo);
         }
@@ -123,8 +140,9 @@ class AuthController extends Controller
                                         [
                                             'access_token' => $token,
                                             'token_type' => 'bearer',
-                                            'expires_in' => auth()->factory()->getTTL() * 1440,
-                                            'user' => auth()->user()->load('role')
+                                            // 'expires_in' => auth()->factory()->getTTL() * 1440,
+                                            'expires_in' => 'null',
+                                            'user' => auth()->user()->load('role', 'profile')
                                         ]
                                     );
 

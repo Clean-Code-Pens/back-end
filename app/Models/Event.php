@@ -37,4 +37,8 @@ class Event extends Model
         return $this->hasMany(Meet::class);
     }
     
+    public function reports()
+    {
+        return $this->hasMany(ReportEvent::class);
+    }
 }

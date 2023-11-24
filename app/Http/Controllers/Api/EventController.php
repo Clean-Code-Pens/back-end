@@ -10,6 +10,7 @@ use Illuminate\Database\QueryException;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\File;
 use App\Helper\Media;
+use App\Models\ReportEvent;
 use Illuminate\Support\Facades\Storage;
 
 class EventController extends Controller
@@ -20,7 +21,7 @@ class EventController extends Controller
     {
         $limit = $request->input('limit', 100); 
         $events = Event::with(['eventCategory', 'user'])
-                            ->where('status',true)
+                            // ->where('status',true)
                             ->take($limit)
                             ->orderBy('id', 'desc')
                             ->get();
@@ -61,7 +62,7 @@ class EventController extends Controller
         $limit = $request->input('limit', 100); 
 
         $events = Event::with(['eventCategory'])
-        ->where('status',true)
+        // ->where('status',true)
         ->where('event_category_id',$id)
         ->take($limit)
         ->orderBy('id', 'desc')
@@ -190,7 +191,7 @@ class EventController extends Controller
         $limit = $request->input('limit', 100); 
         $events = Event::with(['eventCategory', 'user'])
                             ->where('user_id',$id)
-                            ->where('status',true)
+                            // ->where('status',true)
                             ->take($limit)
                             ->orderBy('id', 'desc')
                             ->get();
@@ -233,7 +234,7 @@ class EventController extends Controller
         $limit = $request->input('limit', 100); 
         $events = Event::with(['eventCategory', 'user'])
                             ->where('name', 'LIKE', "%$query%")
-                            ->where('status',true)
+                            // ->where('status',true)
                             ->take($limit)
                             ->orderBy('id', 'desc')
                             ->get();
@@ -268,5 +269,29 @@ class EventController extends Controller
             return $this->responseError('Event not found', 404);
         }
 
+    }
+
+    public function report(Request $request){
+        $id = auth()->user()->id;
+
+        $validator = Validator::make($request->all(),[
+            "event_id" => "required",
+        ]);
+
+        if ($validator->fails()) {
+            return $this->responseFailValidation($validator->errors());
+        }
+
+        $validData = $validator->validated();
+
+        $validData['user_id'] = $id;
+
+
+        try {
+            $meet = ReportEvent::create($validData);
+            return $this->responseSuccessWithData('Event Berhasil Dilaporkan', $meet);
+        } catch (QueryException $e) {
+            return $this->responseError("Internal Server Error", 500, $e->errorInfo);
+        }
     }
 }

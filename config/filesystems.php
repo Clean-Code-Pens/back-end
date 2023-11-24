@@ -83,6 +83,7 @@ return [
         // public_path('storage/app/event') => storage_path('app/public/event'),
         // public_path('event') => storage_path('app/public/event'),
         public_path('public/event') => storage_path('app/public/event'),
+        public_path('public/profilePicture') => storage_path('app/public/profilePicture'),
 
 
 
