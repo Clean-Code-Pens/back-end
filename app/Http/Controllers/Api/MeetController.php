@@ -42,8 +42,6 @@ class MeetController extends Controller
                 ->where('event_id', $request->event_id)
                 ->first();
 
-        // return $meets;
-
         if($meets){
             return $this->responseFailValidation('Anda Sudah Membuat Meeting di Event Ini !!');
             // return $this->responseSuccessWithData('Success', $meets);
@@ -68,6 +66,8 @@ class MeetController extends Controller
 
         try {
             $meet = Meet::create($validData);
+            $this->createNotification($validData['user_id'], 'Anda Berhasil Membuat Pertemuan Baru');
+
             return $this->responseSuccessWithData('Meet Successfully Created', $meet);
         } catch (QueryException $e) {
             return $this->responseError("Internal Server Error", 500, $e->errorInfo);
@@ -75,7 +75,7 @@ class MeetController extends Controller
     }
 
     public function show(string $id){
-        $meets = Meet::with(['user', 'event'])->find($id);
+        $meets = Meet::with(['user.profile', 'event'])->find($id);
 
         if($meets){
             return $this->responseSuccessWithData('Success', $meets);
@@ -91,7 +91,7 @@ class MeetController extends Controller
 
         $limit = $request->input('limit', 100); 
 
-        $meets = Meet::with(['user', 'event'])
+        $meets = Meet::with(['user.profile', 'event'])
                         ->where('event_id', $id)
                         ->take($limit)
                         ->orderBy('id', 'desc')
@@ -111,7 +111,7 @@ class MeetController extends Controller
 
         $limit = $request->input('limit', 100); 
         $id = $request->event_id;
-        $meets = Meet::with(['user', 'event'])
+        $meets = Meet::with(['user.profile', 'event'])
                         ->where('event_id', $id)
                         ->take($limit)
                         ->get();
@@ -203,12 +203,15 @@ class MeetController extends Controller
     public function tutup(Request $request){
         $meets = Meet::where('id', $request->id)
                         ->first();
+        $id = auth()->user()->id;
+
 
         try {
             $data['status'] = 'close';
 
             // Update Table User
             $meets->update($data);
+            $this->createNotification($id, 'Anda Berhasil Menutup Meet');
 
             return $this->responseSuccessWithData('Meet Berhasil Ditutup', $meets);
 
@@ -235,6 +238,8 @@ class MeetController extends Controller
 
         try {
             $meet = ReportMeet::create($validData);
+            $this->createNotification($id, 'Meeting Berhasil Dilaporkan');
+
             return $this->responseSuccessWithData('Meeting Berhasil Dilaporkan', $meet);
         } catch (QueryException $e) {
             return $this->responseError("Internal Server Error", 500, $e->errorInfo);

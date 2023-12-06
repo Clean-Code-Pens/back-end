@@ -40,13 +40,13 @@ class ProfileController extends Controller
         $validator = Validator::make(
             $request->all(),
             [
-                'name'  => "string",
+                'name'  => "",
                 // 'email' => 'required|string|email|max:100|unique:users',
-                'addres'  => "string",
+                'addres'  => "",
                 // "profile_picture" => 'image|mimes:jpg,png,jpeg,PNG',
                 'gender' => "",
-                'job' => "string",
-                'noHp' => "string",
+                'job' => "",
+                'noHp' => "",
             ]
         );
 
@@ -73,7 +73,10 @@ class ProfileController extends Controller
             // Update Table Profile
             $UserProfile->update($validData);
 
-            return $this->responseSuccessWithData('UserProfile updated successfully', $UserProfile);
+            $succes['user'] = $userUpdate;
+            $succes['profile'] = $UserProfile;
+
+            return $this->responseSuccessWithData('UserProfile updated successfully', $succes);
 
         } catch (QueryException $e) {
             return $this->responseError("Internal Server Error", 500, $e->errorInfo);

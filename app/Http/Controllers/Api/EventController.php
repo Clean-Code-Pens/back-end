@@ -111,6 +111,8 @@ class EventController extends Controller
 
         try {
             $event = Event::create($validData);
+            $this->createNotification($validData['user_id'], 'Anda Berhasil membuat Event ' . $validData['name']);
+
             return $this->responseSuccessWithData('Event Successfully Created', $event);
         } catch (QueryException $e) {
             return $this->responseError("Internal Server Error", 500, $e->errorInfo);
@@ -285,10 +287,13 @@ class EventController extends Controller
         $validData = $validator->validated();
 
         $validData['user_id'] = $id;
+        $event = Event::where('id', $validData['event_id'] )->first();
 
 
         try {
             $meet = ReportEvent::create($validData);
+            $this->createNotification($validData['user_id'], 'Anda Berhasil Melaporkan Event ' . $event['name']);
+            
             return $this->responseSuccessWithData('Event Berhasil Dilaporkan', $meet);
         } catch (QueryException $e) {
             return $this->responseError("Internal Server Error", 500, $e->errorInfo);

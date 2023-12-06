@@ -26,9 +26,17 @@ class MeetRequestController extends Controller
 
         $validData['user_id'] = auth()->user()->id;
 
+        $meetRequest = MeetRequest::where('user_id', $validData['user_id'])->where('meet_id', $validData['meet_id'])->first();
+        if($meetRequest){
+            return $this->responseFailValidation('Anda Sudah Pernah Mengajukan !!');
+            // return $this->responseSuccessWithData('Success', $meets);
+
+        }
 
         try {
             $meet = MeetRequest::create($validData);
+            $this->createNotification($validData['user_id'], 'Pengajuan Meeting Anda Berhasil, Mohon Tunggu Hingga Disetujui');
+
             return $this->responseSuccessWithData('Meet Request Successfully Created', $meet);
         } catch (QueryException $e) {
             return $this->responseError("Internal Server Error", 500, $e->errorInfo);
@@ -55,6 +63,9 @@ class MeetRequestController extends Controller
 
         try {
             $meet->update($validData);
+            $this->createNotification(auth()->user()->id, 'Anda telah menyetujui pengguna lain untuk hadir di pertemuan anda');
+            $this->createNotification($meet->user_id, 'Pengajuan anda telah di setujui pembuat meet');
+
             return $this->responseSuccessWithData('Berhasil Disetujui', $meet);
         } catch (QueryException $e) {
             return $this->responseError("Internal Server Error", 500, $e->errorInfo);
@@ -82,6 +93,8 @@ class MeetRequestController extends Controller
 
         try {
             $meet->update($validData);
+            $this->createNotification(auth()->user()->id, 'Anda telah menolak pengguna lain untuk hadir di pertemuan anda');
+            $this->createNotification($meet->user_id, 'Pengajuan anda telah ditolak pembuat meet');
             return $this->responseSuccessWithData('Berhasil Ditolak', $meet);
         } catch (QueryException $e) {
             return $this->responseError("Internal Server Error", 500, $e->errorInfo);

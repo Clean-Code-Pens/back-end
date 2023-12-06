@@ -27,7 +27,7 @@ class EventSeeder extends Seeder
 
         Event::create([
             'name' => 'Konser Eric Nam ‘Before We Begin’ Asia Tour 2020',
-            'user_id' => 2,
+            'user_id' => 3,
             'event_category_id' => 1,
             'description' => 'Konser Eric Nam ‘Before We Begin’ Asia Tour 2020',
             'date' => '2020-01-13',
@@ -75,7 +75,7 @@ class EventSeeder extends Seeder
 
         Event::create([
             'name' => 'Head in the Clouds Indonesia',
-            'user_id' => 2,
+            'user_id' => 4,
             'event_category_id' => 5,
             'description' => 'ini dia salah satu konser yang paling dinanti penggemar musik di Indonesia. Rich Brian, Joji, Niki, dan Hight Brother yang tergabung dalam label 88 Rising akan menyapa fans di Indonesia lewat konser Head in the Clouds Indonesia.',
             'date' => '2023-10-12',
@@ -87,7 +87,7 @@ class EventSeeder extends Seeder
 
         Event::create([
             'name' => 'Louis Tomlinson World Tour 2020',
-            'user_id' => 2,
+            'user_id' => 3,
             'event_category_id' => 5,
             'description' => 'Kamu penggemar band One Direction? Kalau jawabanmu iya, jangan sampai kelewatan konser solo pertama Louis Tomlinson di Jakarta.',
             'date' => '2023-10-12',

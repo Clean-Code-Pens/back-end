@@ -29,5 +29,7 @@ class DatabaseSeeder extends Seeder
         $this->call(EventCategorySeeder::class);
         $this->call(MeetSeeder::class);
         $this->call(MeetRequestSeeder::class);
+        $this->call(ProfileSeeder::class);
+
     }
 }
